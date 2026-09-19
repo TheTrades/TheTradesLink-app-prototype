@@ -2,189 +2,258 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>TheTradesLink</title>
 
 <style>
-* {
-  box-sizing: border-box;
+*{box-sizing:border-box}
+
+:root{
+--blue:#3568ad;
+--dark:#172033;
+--gray:#68768a;
+--light:#eef2f6;
+--border:#d7dfe8;
+--green:#18833c;
 }
 
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #ffffff;
-  color: #172033;
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+background:#fff;
+color:var(--dark);
 }
 
-.app {
-  max-width: 520px;
-  margin: auto;
-  min-height: 100vh;
-  padding-bottom: 95px;
+.app{
+max-width:520px;
+margin:auto;
+min-height:100vh;
+padding-bottom:95px;
 }
 
-header {
-  padding: 22px 20px 10px;
+header{
+padding:22px 20px 10px;
 }
 
-.logo {
-  font-size: 27px;
-  font-weight: 800;
-  color: #2563a8;
+.logo{
+font-size:27px;
+font-weight:850;
+color:var(--blue);
 }
 
-.screen {
-  display: none;
-  padding: 5px 20px 25px;
+.screen{
+display:none;
+padding:8px 20px 30px;
 }
 
-.screen.active {
-  display: block;
+.screen.active{display:block}
+
+h1{
+font-size:32px;
+line-height:1.1;
+margin:20px 0 8px;
 }
 
-h1 {
-  font-size: 31px;
-  margin-bottom: 5px;
+h2{margin:6px 0}
+
+.sub{
+color:var(--gray);
+line-height:1.45;
 }
 
-h2 {
-  margin-bottom: 5px;
+.card{
+background:#fff;
+border:1px solid var(--border);
+border-radius:19px;
+padding:18px;
+margin:14px 0;
 }
 
-.sub {
-  color: #69778a;
-  margin-top: 0;
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:12px;
+margin-top:18px;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-top: 20px;
+.tile{
+border:0;
+border-radius:20px;
+background:var(--light);
+padding:19px;
+min-height:115px;
+text-align:left;
+font-size:18px;
+font-weight:750;
+color:var(--dark);
 }
 
-.tile {
-  border: 0;
-  border-radius: 20px;
-  background: #eef2f6;
-  padding: 20px;
-  min-height: 120px;
-  text-align: left;
-  font-size: 19px;
-  font-weight: 750;
-  color: #172033;
+.tile span{
+display:block;
+font-size:30px;
+margin-bottom:14px;
 }
 
-.tile span {
-  display: block;
-  font-size: 30px;
-  margin-bottom: 15px;
+label{
+display:block;
+font-weight:750;
+margin:16px 0 7px;
 }
 
-.card {
-  border: 1px solid #dce3eb;
-  border-radius: 19px;
-  padding: 18px;
-  margin: 14px 0;
-  background: white;
+input,select,textarea{
+width:100%;
+font-size:16px;
+padding:15px;
+border:1px solid #cbd5df;
+border-radius:13px;
+background:#fff;
 }
 
-.price {
-  color: #2563a8;
-  font-size: 29px;
-  font-weight: 800;
-  margin: 15px 0;
+textarea{min-height:100px}
+
+.blueButton{
+width:100%;
+border:0;
+border-radius:14px;
+background:var(--blue);
+color:#fff;
+font-size:17px;
+font-weight:800;
+padding:16px;
+margin-top:12px;
 }
 
-button {
-  font-family: inherit;
+.secondaryButton{
+width:100%;
+border:1px solid var(--blue);
+border-radius:14px;
+background:#fff;
+color:var(--blue);
+font-size:17px;
+font-weight:800;
+padding:15px;
+margin-top:10px;
 }
 
-.blueButton {
-  width: 100%;
-  border: 0;
-  border-radius: 14px;
-  background: #3568ad;
-  color: white;
-  padding: 16px;
-  font-size: 17px;
-  font-weight: 750;
+.price{
+font-size:29px;
+font-weight:850;
+color:var(--blue);
+margin:14px 0;
 }
 
-label {
-  display: block;
-  font-weight: 700;
-  margin: 16px 0 7px;
+.badge{
+display:inline-block;
+background:#e8f2ff;
+color:var(--blue);
+padding:6px 10px;
+border-radius:20px;
+font-size:13px;
+font-weight:750;
 }
 
-input,
-select,
-textarea {
-  width: 100%;
-  padding: 14px;
-  border: 1px solid #cbd5df;
-  border-radius: 12px;
-  background: white;
-  font-size: 16px;
+.notice{
+background:#f3f6f9;
+border-radius:15px;
+padding:15px;
+margin:15px 0;
 }
 
-textarea {
-  min-height: 100px;
+.green{
+color:var(--green);
+font-weight:750;
 }
 
-.badge {
-  display: inline-block;
-  background: #e8f2ff;
-  color: #2563a8;
-  border-radius: 20px;
-  padding: 6px 10px;
-  font-size: 13px;
-  font-weight: 700;
+.choice{
+display:block;
+width:100%;
+padding:18px;
+margin:10px 0;
+background:#fff;
+border:2px solid var(--border);
+border-radius:17px;
+text-align:left;
+font-size:18px;
+font-weight:800;
+color:var(--dark);
 }
 
-.notice {
-  background: #f3f6f9;
-  border-radius: 15px;
-  padding: 15px;
-  margin: 15px 0;
+.choice small{
+display:block;
+color:var(--gray);
+font-size:14px;
+font-weight:500;
+margin-top:5px;
 }
 
-.bottomNav {
-  position: fixed;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: min(520px, 100%);
-  height: 78px;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  background: white;
-  border-top: 1px solid #dfe4ea;
-  z-index: 20;
+.progress{
+height:7px;
+background:#e7ebef;
+border-radius:20px;
+overflow:hidden;
+margin:15px 0 25px;
 }
 
-.bottomNav button {
-  border: 0;
-  background: white;
-  color: #59697d;
-  font-size: 12px;
+.progress div{
+height:100%;
+background:var(--blue);
 }
 
-.bottomNav button strong {
-  display: block;
-  font-size: 22px;
-  margin-bottom: 3px;
+.welcome{
+padding-top:55px;
+text-align:center;
 }
 
-.bottomNav button.selected {
-  color: #2563a8;
-  font-weight: 800;
+.welcome .logo{
+font-size:34px;
+margin-bottom:25px;
 }
 
-.green {
-  color: #17823b;
-  font-weight: 700;
+.welcomeIcon{
+font-size:62px;
+margin:30px 0 10px;
+}
+
+.accountBox{
+background:#f4f7fa;
+border-radius:17px;
+padding:16px;
+margin:18px 0;
+}
+
+.bottomNav{
+position:fixed;
+bottom:0;
+left:50%;
+transform:translateX(-50%);
+width:min(520px,100%);
+height:80px;
+display:none;
+grid-template-columns:repeat(5,1fr);
+background:#fff;
+border-top:1px solid #dfe4ea;
+z-index:20;
+padding-bottom:env(safe-area-inset-bottom);
+}
+
+.bottomNav.show{display:grid}
+
+.bottomNav button{
+border:0;
+background:#fff;
+color:#59697d;
+font-size:12px;
+}
+
+.bottomNav strong{
+display:block;
+font-size:22px;
+margin-bottom:3px;
+}
+
+.bottomNav .selected{
+color:var(--blue);
+font-weight:800;
 }
 </style>
 </head>
@@ -193,48 +262,235 @@ textarea {
 
 <div class="app">
 
-<header>
-  <div class="logo">TheTradesLink 🔔</div>
+<header id="mainHeader" style="display:none">
+<div class="logo">TheTradesLink 🔔</div>
 </header>
+
+
+<!-- WELCOME -->
+
+<section id="welcome" class="screen active welcome">
+
+<div class="logo">TheTradesLink</div>
+
+<div class="welcomeIcon">👷‍♂️</div>
+
+<h1>Built for the trades.</h1>
+
+<p class="sub">
+Find work, hire skilled workers, connect with the trade community and get paid.
+</p>
+
+<button class="blueButton" onclick="startSignup()">
+Create Account
+</button>
+
+<button class="secondaryButton" onclick="demoLogin()">
+Sign In
+</button>
+
+<p class="sub" style="font-size:13px;margin-top:25px">
+Prototype version — secure account services will be connected before launch.
+</p>
+
+</section>
+
+
+<!-- SIGNUP STEP 1 -->
+
+<section id="signup1" class="screen">
+
+<p class="sub">Step 1 of 4</p>
+
+<div class="progress"><div style="width:25%"></div></div>
+
+<h1>How will you use TheTradesLink?</h1>
+
+<p class="sub">
+You can change this later.
+</p>
+
+<button class="choice" onclick="chooseType('Worker')">
+🔨 Worker
+<small>I want to find jobs and show my work.</small>
+</button>
+
+<button class="choice" onclick="chooseType('Contractor / Hiring')">
+👷 Contractor / Hiring
+<small>I want to post jobs and find workers.</small>
+</button>
+
+<button class="choice" onclick="chooseType('Both')">
+🛠️ Both
+<small>I want to find work and hire people.</small>
+</button>
+
+</section>
+
+
+<!-- SIGNUP STEP 2 -->
+
+<section id="signup2" class="screen">
+
+<p class="sub">Step 2 of 4</p>
+
+<div class="progress"><div style="width:50%"></div></div>
+
+<h1>Create your account</h1>
+
+<p class="sub">
+Tell us the basics.
+</p>
+
+<label>Full Name</label>
+<input id="fullName" placeholder="Your name">
+
+<label>Phone Number</label>
+<input id="phone" type="tel" placeholder="(305) 555-1234">
+
+<label>Email</label>
+<input id="email" type="email" placeholder="you@example.com">
+
+<button class="blueButton" onclick="step2Next()">
+Continue
+</button>
+
+<button class="secondaryButton" onclick="showOnly('signup1')">
+Back
+</button>
+
+</section>
+
+
+<!-- SIGNUP STEP 3 -->
+
+<section id="signup3" class="screen">
+
+<p class="sub">Step 3 of 4</p>
+
+<div class="progress"><div style="width:75%"></div></div>
+
+<h1>Where do you work?</h1>
+
+<p class="sub">
+This helps us show you nearby jobs and workers.
+</p>
+
+<label>State</label>
+<select id="signupState" onchange="loadCities('signupState','signupCity')"></select>
+
+<label>City / General Area</label>
+<select id="signupCity"></select>
+
+<label>ZIP Code</label>
+<input id="signupZip" inputmode="numeric" placeholder="Optional">
+
+<label>How far will you travel?</label>
+
+<select id="radius">
+<option>10 miles</option>
+<option selected>25 miles</option>
+<option>50 miles</option>
+<option>100 miles</option>
+<option>Anywhere in my state</option>
+</select>
+
+<button class="blueButton" onclick="step3Next()">
+Continue
+</button>
+
+<button class="secondaryButton" onclick="showOnly('signup2')">
+Back
+</button>
+
+</section>
+
+
+<!-- SIGNUP STEP 4 -->
+
+<section id="signup4" class="screen">
+
+<p class="sub">Step 4 of 4</p>
+
+<div class="progress"><div style="width:100%"></div></div>
+
+<h1>Tell us about your trade</h1>
+
+<label>Primary Trade</label>
+
+<select id="signupTrade">
+<option>Framing</option>
+<option>Drywall</option>
+<option>Electrical</option>
+<option>Plumbing</option>
+<option>HVAC</option>
+<option>Roofing</option>
+<option>Concrete</option>
+<option>Painting</option>
+<option>Carpentry</option>
+<option>Flooring</option>
+<option>Welding</option>
+<option>Other</option>
+</select>
+
+<label>Years of Experience</label>
+
+<input id="experience" type="number" min="0" placeholder="Example: 8">
+
+<div class="notice">
+<strong>Verification comes next</strong>
+<p>
+Contractors will eventually be able to verify identity, business information, licenses and payment information securely.
+</p>
+</div>
+
+<button class="blueButton" onclick="finishSignup()">
+Create My Profile
+</button>
+
+<button class="secondaryButton" onclick="showOnly('signup3')">
+Back
+</button>
+
+</section>
+
 
 <!-- HOME -->
 
-<section id="home" class="screen active">
+<section id="home" class="screen">
 
-<h1>Work. Connect. Get Paid.</h1>
+<h1 id="homeGreeting">Welcome</h1>
 
 <p class="sub">
-Built for tradespeople, contractors and crews.
+Find opportunities and connect with the trades around you.
 </p>
 
 <div class="card">
 
-<span class="badge">✓ Identity Verified</span>
+<span class="badge">Trade Community</span>
 
-<h2>MiamiFramer305</h2>
-
-<p class="sub">Framing • Florida</p>
+<h2>Show your work</h2>
 
 <p>
-Finished another framing job. Crew knocked it out today.
+Share photos, videos, questions and advice with other tradespeople.
 </p>
 
 <button class="blueButton">
-View Post
+Create Post
 </button>
 
 </div>
 
 <div class="card">
 
-<h2>Trade Community</h2>
+<h2>Jobs Near You</h2>
 
 <p>
-Share your work, ask questions and connect with people in your trade.
+Browse available jobs based on your trade and area.
 </p>
 
-<button class="blueButton">
-Create Post
+<button class="blueButton" onclick="openScreenByName('jobs')">
+Find Work
 </button>
 
 </div>
@@ -281,7 +537,7 @@ Materials
 </section>
 
 
-<!-- POST JOB -->
+<!-- POST -->
 
 <section id="post" class="screen">
 
@@ -292,7 +548,6 @@ Create a job for local workers and crews.
 </p>
 
 <label>Job Title</label>
-
 <input placeholder="Example: Frame New Home">
 
 <label>Trade</label>
@@ -315,36 +570,31 @@ Create a job for local workers and crews.
 <textarea placeholder="Describe the work that needs to be completed"></textarea>
 
 <label>Workers Needed</label>
-
 <input type="number" placeholder="Example: 5">
 
 <label>Job Payment</label>
-
 <input type="number" placeholder="$">
 
 <label>State</label>
-
 <select id="jobState" onchange="loadCities('jobState','jobCity')"></select>
 
 <label>City / General Area</label>
-
 <select id="jobCity"></select>
 
 <label>ZIP Code (Optional)</label>
-
 <input inputmode="numeric" placeholder="Example: 33030">
 
 <div class="notice">
-<strong>Protected Payment</strong>
+<strong>🔒 Protected Payment</strong>
 <p>
-Before work begins, job funds will eventually be secured through the platform's payment system.
+The finished platform will require job funds to be secured before work begins.
 </p>
 </div>
 
 <div class="notice">
-<strong>Platform Fee</strong>
+<strong>2% Platform Fee</strong>
 <p>
-TheTradesLink's planned service fee is 2% of the job payment. The exact fee will be shown before payment is confirmed.
+The exact service fee will be clearly shown before a payment is confirmed.
 </p>
 </div>
 
@@ -362,7 +612,7 @@ Preview Job
 <h1>Messages</h1>
 
 <p class="sub">
-Keep job conversations and records in one place.
+Keep job conversations and records together.
 </p>
 
 <div class="card">
@@ -386,13 +636,19 @@ Keep job conversations and records in one place.
 
 <h1>Your Profile</h1>
 
-<p class="sub">
-Tell people who you are and where you work.
-</p>
+<div class="accountBox">
+
+<h2 id="profileName">Your Name</h2>
+
+<p id="profileType">Worker</p>
+
+<span class="badge">Profile Created</span>
+
+</div>
 
 <label>Account Type</label>
 
-<select>
+<select id="profileAccountType">
 <option>Worker</option>
 <option>Contractor / Hiring</option>
 <option>Both</option>
@@ -400,7 +656,7 @@ Tell people who you are and where you work.
 
 <label>Primary Trade</label>
 
-<select>
+<select id="profileTrade">
 <option>Framing</option>
 <option>Drywall</option>
 <option>Electrical</option>
@@ -410,30 +666,26 @@ Tell people who you are and where you work.
 <option>Concrete</option>
 <option>Painting</option>
 <option>Carpentry</option>
+<option>Flooring</option>
+<option>Welding</option>
 <option>Other</option>
 </select>
 
 <label>Years of Experience</label>
-
-<input type="number" placeholder="Example: 8">
+<input id="profileExperience" type="number">
 
 <label>State</label>
-
-<select id="profileState"
-onchange="loadCities('profileState','profileCity')">
-</select>
+<select id="profileState" onchange="loadCities('profileState','profileCity')"></select>
 
 <label>City / General Area</label>
-
 <select id="profileCity"></select>
 
 <label>ZIP Code (Optional)</label>
+<input id="profileZip">
 
-<input inputmode="numeric" placeholder="Example: 33030">
+<label>Work Radius</label>
 
-<label>How Far Will You Travel?</label>
-
-<select>
+<select id="profileRadius">
 <option>10 miles</option>
 <option>25 miles</option>
 <option>50 miles</option>
@@ -445,20 +697,22 @@ onchange="loadCities('profileState','profileCity')">
 
 <h2>Verification</h2>
 
-<p class="green">✓ Identity Verification</p>
-
-<p>Business / License Verification</p>
-
-<p>Payment Verification</p>
+<p>🪪 Identity Verification</p>
+<p>🏢 Business / License Verification</p>
+<p>💳 Payment Verification</p>
 
 <p class="sub">
-Secure verification providers will be connected before the real payment system launches.
+These will use secure verification and payment providers in the production app.
 </p>
 
 </div>
 
-<button class="blueButton">
+<button class="blueButton" onclick="saveProfile()">
 Save Profile
+</button>
+
+<button class="secondaryButton" onclick="signOut()">
+Sign Out
 </button>
 
 </section>
@@ -466,31 +720,31 @@ Save Profile
 </div>
 
 
-<!-- NAVIGATION -->
+<!-- NAV -->
 
-<nav class="bottomNav">
+<nav id="bottomNav" class="bottomNav">
 
-<button class="selected" onclick="openScreen('home',this)">
+<button id="navHome" class="selected" onclick="openScreen('home',this)">
 <strong>⌂</strong>
 Home
 </button>
 
-<button onclick="openScreen('jobs',this)">
+<button id="navJobs" onclick="openScreen('jobs',this)">
 <strong>🔨</strong>
 Jobs
 </button>
 
-<button onclick="openScreen('post',this)">
+<button id="navPost" onclick="openScreen('post',this)">
 <strong>＋</strong>
 Post
 </button>
 
-<button onclick="openScreen('messages',this)">
+<button id="navMessages" onclick="openScreen('messages',this)">
 <strong>💬</strong>
 Messages
 </button>
 
-<button onclick="openScreen('profile',this)">
+<button id="navProfile" onclick="openScreen('profile',this)">
 <strong>👤</strong>
 Profile
 </button>
@@ -560,18 +814,32 @@ const locations = {
 };
 
 
+let signupData = {
+type:"",
+name:"",
+phone:"",
+email:"",
+state:"",
+city:"",
+zip:"",
+radius:"",
+trade:"",
+experience:""
+};
+
+
 function setupStates(stateID,cityID){
 
-const state =
-document.getElementById(stateID);
+const el=document.getElementById(stateID);
 
-state.innerHTML =
-'<option value="">Choose your state</option>';
+if(!el)return;
 
-Object.keys(locations).forEach(function(name){
+el.innerHTML='<option value="">Choose your state</option>';
 
-state.innerHTML +=
-'<option value="'+name+'">'+name+'</option>';
+Object.keys(locations).forEach(function(state){
+
+el.innerHTML +=
+'<option value="'+state+'">'+state+'</option>';
 
 });
 
@@ -582,21 +850,22 @@ loadCities(stateID,cityID);
 
 function loadCities(stateID,cityID){
 
-const state =
-document.getElementById(stateID).value;
+const stateEl=document.getElementById(stateID);
+const cityEl=document.getElementById(cityID);
 
-const city =
-document.getElementById(cityID);
+if(!stateEl || !cityEl)return;
 
-city.innerHTML =
+const selected=stateEl.value;
+
+cityEl.innerHTML=
 '<option value="">Choose your city / area</option>';
 
-if(locations[state]){
+if(locations[selected]){
 
-locations[state].forEach(function(name){
+locations[selected].forEach(function(city){
 
-city.innerHTML +=
-'<option>'+name+'</option>';
+cityEl.innerHTML +=
+'<option value="'+city+'">'+city+'</option>';
 
 });
 
@@ -605,93 +874,327 @@ city.innerHTML +=
 }
 
 
-setupStates("jobState","jobCity");
+function showOnly(id){
 
-setupStates("profileState","profileCity");
-
-
-function openScreen(id,button){
-
-document.querySelectorAll(".screen")
-.forEach(function(screen){
-
+document.querySelectorAll(".screen").forEach(function(screen){
 screen.classList.remove("active");
-
 });
 
-document.getElementById(id)
-.classList.add("active");
-
-
-document.querySelectorAll(".bottomNav button")
-.forEach(function(navButton){
-
-navButton.classList.remove("selected");
-
-});
-
-button.classList.add("selected");
+document.getElementById(id).classList.add("active");
 
 window.scrollTo(0,0);
 
 }
 
 
+function startSignup(){
+
+signupData={
+type:"",
+name:"",
+phone:"",
+email:"",
+state:"",
+city:"",
+zip:"",
+radius:"",
+trade:"",
+experience:""
+};
+
+showOnly("signup1");
+
+}
+
+
+function chooseType(type){
+
+signupData.type=type;
+showOnly("signup2");
+
+}
+
+
+function step2Next(){
+
+const name=document.getElementById("fullName").value.trim();
+const phone=document.getElementById("phone").value.trim();
+const email=document.getElementById("email").value.trim();
+
+if(!name){
+alert("Please enter your name.");
+return;
+}
+
+if(!phone && !email){
+alert("Please enter a phone number or email.");
+return;
+}
+
+signupData.name=name;
+signupData.phone=phone;
+signupData.email=email;
+
+showOnly("signup3");
+
+}
+
+
+function step3Next(){
+
+const state=document.getElementById("signupState").value;
+const city=document.getElementById("signupCity").value;
+
+if(!state){
+alert("Please choose your state.");
+return;
+}
+
+if(!city){
+alert("Please choose your city or general area.");
+return;
+}
+
+signupData.state=state;
+signupData.city=city;
+signupData.zip=document.getElementById("signupZip").value.trim();
+signupData.radius=document.getElementById("radius").value;
+
+showOnly("signup4");
+
+}
+
+
+function finishSignup(){
+
+signupData.trade=document.getElementById("signupTrade").value;
+signupData.experience=document.getElementById("experience").value;
+
+localStorage.setItem(
+"theTradesLinkUser",
+JSON.stringify(signupData)
+);
+
+loadUserIntoProfile();
+
+enterApp();
+
+}
+
+
+function enterApp(){
+
+document.getElementById("mainHeader").style.display="block";
+document.getElementById("bottomNav").classList.add("show");
+
+showOnly("home");
+
+document.querySelectorAll(".bottomNav button")
+.forEach(function(btn){
+btn.classList.remove("selected");
+});
+
+document.getElementById("navHome").classList.add("selected");
+
+const user=getUser();
+
+if(user && user.name){
+
+document.getElementById("homeGreeting").textContent=
+"Welcome, "+user.name.split(" ")[0]+" 👋";
+
+}
+
+}
+
+
+function getUser(){
+
+const saved=localStorage.getItem("theTradesLinkUser");
+
+if(!saved)return null;
+
+try{
+return JSON.parse(saved);
+}catch(e){
+return null;
+}
+
+}
+
+
+function loadUserIntoProfile(){
+
+const user=getUser();
+
+if(!user)return;
+
+document.getElementById("profileName").textContent=
+user.name || "Your Name";
+
+document.getElementById("profileType").textContent=
+user.type || "Worker";
+
+document.getElementById("profileAccountType").value=
+user.type || "Worker";
+
+document.getElementById("profileTrade").value=
+user.trade || "Framing";
+
+document.getElementById("profileExperience").value=
+user.experience || "";
+
+document.getElementById("profileState").value=
+user.state || "";
+
+loadCities("profileState","profileCity");
+
+document.getElementById("profileCity").value=
+user.city || "";
+
+document.getElementById("profileZip").value=
+user.zip || "";
+
+document.getElementById("profileRadius").value=
+user.radius || "25 miles";
+
+}
+
+
+function saveProfile(){
+
+const oldUser=getUser() || {};
+
+oldUser.type=
+document.getElementById("profileAccountType").value;
+
+oldUser.trade=
+document.getElementById("profileTrade").value;
+
+oldUser.experience=
+document.getElementById("profileExperience").value;
+
+oldUser.state=
+document.getElementById("profileState").value;
+
+oldUser.city=
+document.getElementById("profileCity").value;
+
+oldUser.zip=
+document.getElementById("profileZip").value;
+
+oldUser.radius=
+document.getElementById("profileRadius").value;
+
+localStorage.setItem(
+"theTradesLinkUser",
+JSON.stringify(oldUser)
+);
+
+loadUserIntoProfile();
+
+alert("Profile saved!");
+
+}
+
+
+function demoLogin(){
+
+const user=getUser();
+
+if(user){
+loadUserIntoProfile();
+enterApp();
+}else{
+alert("No account is saved on this device yet. Tap Create Account first.");
+}
+
+}
+
+
+function signOut(){
+
+document.getElementById("mainHeader").style.display="none";
+document.getElementById("bottomNav").classList.remove("show");
+
+showOnly("welcome");
+
+}
+
+
+function openScreen(id,button){
+
+showOnly(id);
+
+document.querySelectorAll(".bottomNav button")
+.forEach(function(btn){
+btn.classList.remove("selected");
+});
+
+button.classList.add("selected");
+
+}
+
+
+function openScreenByName(id){
+
+showOnly(id);
+
+document.querySelectorAll(".bottomNav button")
+.forEach(function(btn){
+btn.classList.remove("selected");
+});
+
+const map={
+home:"navHome",
+jobs:"navJobs",
+post:"navPost",
+messages:"navMessages",
+profile:"navProfile"
+};
+
+if(map[id]){
+document.getElementById(map[id]).classList.add("selected");
+}
+
+}
+
+
 function showJobPanel(type){
 
-const panel =
-document.getElementById("jobPanel");
+const panel=document.getElementById("jobPanel");
 
+if(type==="work"){
 
-if(type === "work"){
+panel.innerHTML=`
 
-panel.innerHTML = `
-
-<h2>Available Near You</h2>
+<h2 style="margin-top:25px">Available Near You</h2>
 
 <div class="card">
 
 <h2>Frame New Home</h2>
 
-<p class="sub">
-Framing • 5 workers
-</p>
+<p class="sub">Framing • 5 workers</p>
 
-<p>
-Labor for residential framing project.
-Plans provided.
-</p>
+<p>Labor for residential framing project. Plans provided.</p>
 
-<div class="price">
-$4,000
-</div>
+<div class="price">$4,000</div>
 
-<button class="blueButton">
-View & Apply
-</button>
+<button class="blueButton">View & Apply</button>
 
 </div>
-
 
 <div class="card">
 
 <h2>Drywall Hang & Finish</h2>
 
-<p class="sub">
-Drywall • 3–4 workers
-</p>
+<p class="sub">Drywall • 3–4 workers</p>
 
-<p>
-Hang and finish drywall for renovation.
-</p>
+<p>Hang and finish drywall for renovation.</p>
 
-<div class="price">
-$3,200
-</div>
+<div class="price">$3,200</div>
 
-<button class="blueButton">
-View & Apply
-</button>
+<button class="blueButton">View & Apply</button>
 
 </div>
 
@@ -700,42 +1203,31 @@ View & Apply
 }
 
 
-if(type === "workers"){
+if(type==="workers"){
 
-panel.innerHTML = `
+panel.innerHTML=`
 
-<h2>Workers Near You</h2>
+<h2 style="margin-top:25px">Workers Near You</h2>
 
 <div class="card">
 
-<span class="badge">
-✓ Identity Verified
-</span>
+<span class="badge">✓ Identity Verified</span>
 
 <h2>Carlos R.</h2>
 
-<p>
-Framing • 8 years experience
-</p>
+<p>Framing • 8 years experience</p>
 
-<button class="blueButton">
-View Profile
-</button>
+<button class="blueButton">View Profile</button>
 
 </div>
-
 
 <div class="card">
 
 <h2>305 Drywall Crew</h2>
 
-<p>
-Drywall • Finishing • Repairs
-</p>
+<p>Drywall • Finishing • Repairs</p>
 
-<button class="blueButton">
-View Profile
-</button>
+<button class="blueButton">View Profile</button>
 
 </div>
 
@@ -744,27 +1236,21 @@ View Profile
 }
 
 
-if(type === "myjobs"){
+if(type==="myjobs"){
 
-panel.innerHTML = `
+panel.innerHTML=`
 
-<h2>My Jobs</h2>
+<h2 style="margin-top:25px">My Jobs</h2>
 
 <div class="card">
 
 <h2>Frame New Home</h2>
 
-<p class="green">
-● In Progress
-</p>
+<p class="green">● In Progress</p>
 
-<p>
-Job payment: $4,000
-</p>
+<p>Job payment: $4,000</p>
 
-<button class="blueButton">
-Open Job
-</button>
+<button class="blueButton">Open Job</button>
 
 </div>
 
@@ -773,11 +1259,11 @@ Open Job
 }
 
 
-if(type === "materials"){
+if(type==="materials"){
 
-panel.innerHTML = `
+panel.innerHTML=`
 
-<h2>Materials</h2>
+<h2 style="margin-top:25px">Materials</h2>
 
 <div class="card">
 
@@ -787,28 +1273,24 @@ panel.innerHTML = `
 Search participating suppliers without leaving TheTradesLink.
 </p>
 
-<input
-placeholder="Example: 5/8 drywall">
-
-<br><br>
+<input placeholder="Example: 5/8 drywall">
 
 <button class="blueButton">
 Search Materials
 </button>
 
 <p class="sub">
-Live supplier prices and availability will be connected later.
+Live supplier pricing and availability will be connected later.
 </p>
 
 </div>
-
 
 <div class="card">
 
 <h2>Change Orders</h2>
 
 <p>
-If materials or labor cost more than expected, both sides will be able to approve a new job total inside the app.
+If material or labor costs change, both sides will eventually be able to approve the new job total inside the job.
 </p>
 
 </div>
@@ -819,7 +1301,25 @@ If materials or labor cost more than expected, both sides will be able to approv
 
 }
 
+
+setupStates("signupState","signupCity");
+setupStates("jobState","jobCity");
+setupStates("profileState","profileCity");
+
 showJobPanel("work");
+
+
+window.addEventListener("load",function(){
+
+const user=getUser();
+
+if(user){
+
+loadUserIntoProfile();
+
+}
+
+});
 
 </script>
 
