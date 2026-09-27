@@ -759,8 +759,9 @@ Profile
 <script>
 const SUPABASE_URL = "https://ymnlhhbazfwinpudgqkn.supabase.co";
 const SUPABASE_KEY = "sb_publishable_Vi4UHmsw6eEiaMxy-Qfw0A_Tq-DmIHT";
-const supabase = window.supabase.createClient(SUPABASE_URL, async function signUpUser(email, password) {
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 async function signUpUser(email, password) {
+
 const { data, error } = await supabase.auth.signUp({
     email: email,
     password: password
