@@ -965,29 +965,7 @@ showOnly("signup2");
 }
 
 
-function step2Next(){
 
-const name=document.getElementById("fullName").value.trim();
-const phone=document.getElementById("phone").value.trim();
-const email=document.getElementById("email").value.trim();
-
-if(!name){
-alert("Please enter your name.");
-return;
-}
-
-if(!phone && !email){
-alert("Please enter a phone number or email.");
-return;
-}
-
-signupData.name=name;
-signupData.phone=phone;
-signupData.email=email;
-
-showOnly("signup3");
-
-}
 
 
 function step3Next(){
