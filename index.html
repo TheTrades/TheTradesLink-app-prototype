@@ -351,6 +351,9 @@ Tell us the basics.
 <label>Email</label>
 <input id="email" type="email" placeholder="you@example.com">
 
+<label>Password</label>
+<input id="password" type="password" placeholder="Create a password" minlength="6">
+  
 <button class="blueButton" onclick="step2Next()">
 Continue
 </button>
@@ -751,10 +754,57 @@ Profile
 
 </nav>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
+const SUPABASE_URL = "https://ymnlhhbazfwinpudgqkn.supabase.co/rest/v1/";
+const SUPABASE_KEY = "sb_publishable_Vi4UHmsw6eEiaMxy-Qfw0A_Tq-DmIHT";
+const supabase = window.supabase.createClient(SUPABASE_URL, async function signUpUser(email, password) {
+async function signUpUser(email, password) {
+const { data, error } = await supabase.auth.signUp({
+    email: email,
+    password: password
+  });
 
-const locations = {
+  if (error) {
+    alert("Signup error: " + error.message);
+    return;
+  }
+
+  alert("Account created! Check your email to confirm your account.");
+  return data;
+} 
+
+  async function step2Next() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value;
+
+  if (!email || !password) {
+    alert("Please enter your email and password.");
+    return;
+  }
+
+const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if (!emailPattern.test(email)) {
+  alert("Please enter a valid email address.");
+  return;
+}
+    if (password.length < 8) {
+  alert("Password must be at least 8 characters long.");
+  return;
+}
+ if (!/[A-Za-z]/.test(password) || !/[0-9]/.test(password)) {
+  alert("Password must contain at least one letter and one number.");
+  return;
+}
+    const result = await signUpUser(email, password);
+
+  if (result) {
+    showOnly("signup3");
+  }
+}
+  const locations = {
 
 "Florida":[
 "Miami",
