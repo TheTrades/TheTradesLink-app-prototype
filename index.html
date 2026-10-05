@@ -601,7 +601,7 @@ The exact service fee will be clearly shown before a payment is confirmed.
 </p>
 </div>
 
-<button class="blueButton">
+<button class="blueButton" onclick="previewJob()">
 Preview Job
 </button>
 
@@ -1187,7 +1187,9 @@ document.getElementById(map[id]).classList.add("selected");
 }
 
 }
-
+function previewJob(){
+  alert("Job Preview is working!");
+}
 
 function showJobPanel(type){
 
