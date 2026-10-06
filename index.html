@@ -578,6 +578,18 @@ Create a job for local workers and crews.
 <label>Job Payment</label>
 <input type="number" placeholder="$">
 
+<label>Who Purchases Materials?</label>
+<select id="materialsBuyer" onchange="toggleMaterialsBudget()">
+  <option value="poster">Job Poster</option>
+  <option value="worker">Worker / Crew</option>
+</select>
+
+<div id="materialsBudgetSection" style="display:none;">
+  <label>Materials Budget</label>
+  <input id="materialsBudget" type="number" placeholder="$">
+  <small>This money is for approved material purchases and is separate from worker earnings.</small>
+</div>
+  
 <label>State</label>
 <select id="jobState" onchange="loadCities('jobState','jobCity')"></select>
 
@@ -1191,6 +1203,18 @@ function previewJob(){
   alert("Job Preview is working!");
 }
 
+  function toggleMaterialsBudget(){
+  const buyer = document.getElementById("materialsBuyer").value;
+  const section = document.getElementById("materialsBudgetSection");
+
+  if(buyer === "worker"){
+    section.style.display = "block";
+  } else {
+    section.style.display = "none";
+    document.getElementById("materialsBudget").value = "";
+  }
+}
+
 function showJobPanel(type){
 
 const panel=document.getElementById("jobPanel");
@@ -1325,7 +1349,40 @@ If material or labor costs change, both sides will eventually be able to approve
 </p>
 
 </div>
+<div class="card">
 
+  <h2>Material Purchase Request</h2>
+
+  <p class="sub">
+    Workers can request materials for an active job without accessing the job funds directly.
+  </p>
+
+  <label>Material</label>
+  <input id="materialRequestItem" placeholder="Example: 5/8 drywall">
+
+  <label>Quantity</label>
+  <input id="materialRequestQty" type="number" placeholder="Example: 40">
+
+  <label>Preferred Store</label>
+  <select id="materialRequestStore">
+    <option value="">Choose a store</option>
+    <option>Home Depot</option>
+    <option>Lowe's</option>
+    <option>Local Supplier</option>
+  </select>
+
+  <label>Estimated Cost</label>
+  <input id="materialRequestCost" type="number" placeholder="$0.00">
+
+  <button class="blueButton">
+    Send Purchase Request
+  </button>
+
+  <p class="sub">
+    The worker does not receive the deposited job funds. The contractor reviews and approves the purchase request.
+  </p>
+
+</div>
 `;
 
 }
