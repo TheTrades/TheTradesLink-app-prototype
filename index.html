@@ -1215,6 +1215,32 @@ function previewJob(){
   }
 }
 
+function sendMaterialRequest() {
+  const item = document.getElementById("materialRequestItem").value.trim();
+  const qty = document.getElementById("materialRequestQty").value;
+  const store = document.getElementById("materialRequestStore").value;
+  const cost = document.getElementById("materialRequestCost").value;
+
+  if (!item || !qty || !store || !cost) {
+    alert("Please fill out all material request fields.");
+    return;
+  }
+
+  if (Number(qty) <= 0 || Number(cost) <= 0) {
+    alert("Quantity and estimated cost must be greater than 0.");
+    return;
+  }
+
+  alert(
+    "Purchase Request Sent!\n\n" +
+    "Material: " + item + "\n" +
+    "Quantity: " + qty + "\n" +
+    "Store: " + store + "\n" +
+    "Estimated Cost: $" + Number(cost).toFixed(2) + "\n\n" +
+    "Status: Pending Contractor Approval"
+  );
+}
+  
 function showJobPanel(type){
 
 const panel=document.getElementById("jobPanel");
@@ -1374,7 +1400,7 @@ If material or labor costs change, both sides will eventually be able to approve
   <label>Estimated Cost</label>
   <input id="materialRequestCost" type="number" placeholder="$0.00">
 
-  <button class="blueButton">
+ <button class="blueButton" onclick="sendMaterialRequest()">
     Send Purchase Request
   </button>
 
