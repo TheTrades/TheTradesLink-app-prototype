@@ -872,8 +872,50 @@ if (!emailPattern.test(email)) {
 "Charleston",
 "Columbia",
 "Greenville"
-]
-
+],
+"Alabama": ["Birmingham", "Montgomery", "Mobile", "Huntsville"],
+"Alaska": ["Anchorage", "Fairbanks", "Juneau"],
+"Arizona": ["Phoenix", "Tucson", "Mesa", "Scottsdale"],
+"Arkansas": ["Little Rock", "Fayetteville", "Fort Smith"],
+"Colorado": ["Denver", "Colorado Springs", "Aurora", "Fort Collins"],
+"Connecticut": ["Bridgeport", "Hartford", "New Haven", "Stamford"],
+"Delaware": ["Wilmington", "Dover", "Newark"],
+"Hawaii": ["Honolulu", "Hilo", "Kailua"],
+"Idaho": ["Boise", "Meridian", "Nampa"],
+"Illinois": ["Chicago", "Aurora", "Naperville", "Rockford"],
+"Indiana": ["Indianapolis", "Fort Wayne", "Evansville"],
+"Iowa": ["Des Moines", "Cedar Rapids", "Davenport"],
+"Kansas": ["Wichita", "Overland Park", "Topeka"],
+"Kentucky": ["Louisville", "Lexington", "Bowling Green"],
+"Louisiana": ["New Orleans", "Baton Rouge", "Shreveport"],
+"Maine": ["Portland", "Lewiston", "Bangor"],
+"Maryland": ["Baltimore", "Frederick", "Rockville"],
+"Massachusetts": ["Boston", "Worcester", "Springfield"],
+"Michigan": ["Detroit", "Grand Rapids", "Ann Arbor"],
+"Minnesota": ["Minneapolis", "Saint Paul", "Rochester"],
+"Mississippi": ["Jackson", "Gulfport", "Biloxi"],
+"Missouri": ["Kansas City", "Saint Louis", "Springfield"],
+"Montana": ["Billings", "Missoula", "Bozeman"],
+"Nebraska": ["Omaha", "Lincoln", "Bellevue"],
+"Nevada": ["Las Vegas", "Henderson", "Reno"],
+"New Hampshire": ["Manchester", "Nashua", "Concord"],
+"New Jersey": ["Newark", "Jersey City", "Paterson"],
+"New Mexico": ["Albuquerque", "Santa Fe", "Las Cruces"],
+"North Dakota": ["Fargo", "Bismarck", "Grand Forks"],
+"Ohio": ["Columbus", "Cleveland", "Cincinnati"],
+"Oklahoma": ["Oklahoma City", "Tulsa", "Norman"],
+"Oregon": ["Portland", "Salem", "Eugene"],
+"Pennsylvania": ["Philadelphia", "Pittsburgh", "Allentown"],
+"Rhode Island": ["Providence", "Warwick", "Cranston"],
+"South Dakota": ["Sioux Falls", "Rapid City", "Aberdeen"],
+"Tennessee": ["Nashville", "Memphis", "Knoxville"],
+"Utah": ["Salt Lake City", "Provo", "West Valley City"],
+"Vermont": ["Burlington", "South Burlington", "Rutland"],
+"Virginia": ["Virginia Beach", "Richmond", "Norfolk"],
+"Washington": ["Seattle", "Spokane", "Tacoma"],
+"West Virginia": ["Charleston", "Huntington", "Morgantown"],
+"Wisconsin": ["Milwaukee", "Madison", "Green Bay"],
+"Wyoming": ["Cheyenne", "Casper", "Laramie"]
 };
 
 
@@ -1214,7 +1256,25 @@ function previewJob(){
     document.getElementById("materialsBudget").value = "";
   }
 }
+function searchMaterials() {
+  const search = document.getElementById("materialSearch").value.trim();
+  const results = document.getElementById("materialResults");
 
+  if (!search) {
+    alert("Enter a material to search.");
+    return;
+  }
+
+  results.style.display = "block";
+}
+
+function selectMaterial(item, store, price) {
+  document.getElementById("materialRequestItem").value = item;
+  document.getElementById("materialRequestStore").value = store;
+  document.getElementById("materialRequestCost").value = price;
+
+  document.getElementById("materialRequestQty").focus();
+}
 function sendMaterialRequest() {
   const item = document.getElementById("materialRequestItem").value.trim();
   const qty = document.getElementById("materialRequestQty").value;
@@ -1348,21 +1408,71 @@ panel.innerHTML=`
 
 <div class="card">
 
-<h2>Compare Material Prices</h2>
+  <h2>Find Materials</h2>
 
-<p>
-Search participating suppliers without leaving TheTradesLink.
-</p>
+  <p class="sub">
+    Search and compare materials from different suppliers.
+  </p>
 
-<input placeholder="Example: 5/8 drywall">
+  <input
+    id="materialSearch"
+    placeholder="Search materials... Example: 5/8 drywall"
+  >
 
-<button class="blueButton">
-Search Materials
-</button>
+  <button class="blueButton" onclick="searchMaterials()">
+    Search Materials
+  </button>
 
-<p class="sub">
-Live supplier pricing and availability will be connected later.
-</p>
+  <div id="materialResults" style="display:none; margin-top:20px;">
+
+    <h3>Results</h3>
+
+    <div style="display:flex; overflow-x:auto; gap:12px; padding:5px 0 15px 0; scroll-snap-type:x mandatory;">
+
+      <div class="card" style="min-width:240px; scroll-snap-align:start;">
+        <h3>5/8 Drywall</h3>
+        <p class="sub">Home Depot</p>
+        <p><strong>$14.98 / sheet</strong></p>
+        <p>📍 3.2 miles away</p>
+        <p>✓ In Stock</p>
+
+        <button class="blueButton"
+          onclick="selectMaterial('5/8 Drywall','Home Depot',14.98)">
+          Select
+        </button>
+      </div>
+
+      <div class="card" style="min-width:240px; scroll-snap-align:start;">
+        <h3>5/8 Drywall</h3>
+        <p class="sub">Lowe's</p>
+        <p><strong>$15.47 / sheet</strong></p>
+        <p>📍 5.1 miles away</p>
+        <p>✓ In Stock</p>
+
+        <button class="blueButton"
+          onclick="selectMaterial('5/8 Drywall','Lowe\\'s',15.47)">
+          Select
+        </button>
+      </div>
+
+      <div class="card" style="min-width:240px; scroll-snap-align:start;">
+        <h3>5/8 Drywall</h3>
+        <p class="sub">Local Supplier</p>
+        <p><strong>$13.89 / sheet</strong></p>
+        <p>📍 7.4 miles away</p>
+        <p>✓ In Stock</p>
+
+        <button class="blueButton"
+          onclick="selectMaterial('5/8 Drywall','Local Supplier',13.89)">
+          Select
+        </button>
+      </div>
+
+    </div>
+
+    <p class="sub">← Swipe to compare suppliers →</p>
+
+  </div>
 
 </div>
 
