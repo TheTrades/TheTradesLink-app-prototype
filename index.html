@@ -1033,11 +1033,22 @@ function searchSignupCities() {
           input.value.trim() !== query ||
           document.getElementById("signupState").value !== state) return;
 
-      const places = (data.results || []).filter(function(place) {
-        return place.state &&
-          place.state.toLowerCase() === state.toLowerCase() &&
-          ["city", "suburb", "district"].includes(place.result_type);
-      });
+const places = (data.results || []).filter(function(place) {
+  const matchesName = [
+    place.name,
+    place.city,
+    place.suburb,
+    place.district
+  ].some(function(name) {
+    return typeof name === "string" &&
+      name.toLowerCase().includes(query.toLowerCase());
+  });
+
+  return place.state &&
+    place.state.toLowerCase() === state.toLowerCase() &&
+    ["city", "suburb", "district"].includes(place.result_type) &&
+    matchesName;
+});
 
       places.forEach(function(place) {
         const button = document.createElement("button");
