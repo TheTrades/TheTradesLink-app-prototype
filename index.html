@@ -1048,11 +1048,36 @@ showOnly("signup4");
 }
 
 
-function finishSignup(){
+async function finishSignup(){
 
 signupData.trade=document.getElementById("signupTrade").value;
 signupData.experience=document.getElementById("experience").value;
+const { data: { user }, error: userError } =
+  await supabaseClient.auth.getUser();
 
+if (userError || !user) {
+  alert("Please confirm your email and sign in before completing your profile.");
+  return;
+}
+
+const { error: profileError } = await supabaseClient
+  .from("profiles")
+  .upsert({
+    id: user.id,
+    full_name: signupData.name,
+    account_type: signupData.accountType,
+    primary_trade: signupData.trade,
+    years_experience: Number(signupData.experience) || 0,
+    state: signupData.state,
+    city: signupData.city,
+    zip_code: signupData.zip,
+    work_radius: Number(signupData.radius) || 25
+  });
+
+if (profileError) {
+  alert("Could not save profile: " + profileError.message);
+  return;
+}
 localStorage.setItem(
 "theTradesLinkUser",
 JSON.stringify(signupData)
