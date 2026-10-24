@@ -383,7 +383,14 @@ This helps us show you nearby jobs and workers.
 <select id="signupState" onchange="loadCities('signupState','signupCity')"></select>
 
 <label>City / General Area</label>
-<select id="signupCity"></select>
+<input
+  id="signupCity"
+  type="text"
+  placeholder="Start typing your city or neighborhood"
+  autocomplete="off"
+oninput="searchSignupCities()"
+>
+<div id="signupCitySuggestions"></div>
 
 <label>ZIP Code</label>
 <input id="signupZip" inputmode="numeric" placeholder="Optional">
@@ -959,7 +966,12 @@ const stateEl=document.getElementById(stateID);
 const cityEl=document.getElementById(cityID);
 
 if(!stateEl || !cityEl)return;
-
+if (cityEl.tagName === "INPUT") {
+  cityEl.value = "";
+  const suggestions = document.getElementById("signupCitySuggestions");
+  if (suggestions) suggestions.innerHTML = "";
+  return;
+}
 const selected=stateEl.value;
 
 cityEl.innerHTML=
@@ -978,6 +990,77 @@ cityEl.innerHTML +=
 
 }
 
+
+const GEOAPIFY_KEY = "d01a8fba431b47c58e64d2b49ce4181b";
+let citySearchTimer;
+let citySearchNumber = 0;
+
+function searchSignupCities() {
+  clearTimeout(citySearchTimer);
+
+  const input = document.getElementById("signupCity");
+  const suggestions = document.getElementById("signupCitySuggestions");
+  const state = document.getElementById("signupState").value;
+  const query = input.value.trim();
+  const searchNumber = ++citySearchNumber;
+
+  suggestions.innerHTML = "";
+
+  if (!state || query.length < 3) return;
+
+  citySearchTimer = setTimeout(async function() {
+    if (GEOAPIFY_KEY === "ADD_NEW_KEY_LATER") return;
+
+    try {
+      const params = new URLSearchParams({
+        text: query + ", " + state + ", USA",
+        type: "locality",
+        filter: "countrycode:us",
+        format: "json",
+        limit: "10",
+        apiKey: GEOAPIFY_KEY
+      });
+
+      const response = await fetch(
+        "https://api.geoapify.com/v1/geocode/autocomplete?" + params
+      );
+
+      if (!response.ok) throw new Error("Location search failed");
+
+      const data = await response.json();
+
+      if (searchNumber !== citySearchNumber ||
+          input.value.trim() !== query ||
+          document.getElementById("signupState").value !== state) return;
+
+      const places = (data.results || []).filter(function(place) {
+        return place.state &&
+          place.state.toLowerCase() === state.toLowerCase() &&
+          ["city", "suburb", "district"].includes(place.result_type);
+      });
+
+      places.forEach(function(place) {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = place.formatted;
+        button.style.display = "block";
+        button.style.width = "100%";
+        button.style.padding = "10px";
+        button.style.textAlign = "left";
+
+        button.onclick = function() {
+          input.value = place.name || place.city || query;
+          suggestions.innerHTML = "";
+          ++citySearchNumber;
+        };
+
+        suggestions.appendChild(button);
+      });
+    } catch (error) {
+      console.error("Location suggestions unavailable:", error);
+    }
+  }, 600);
+}
 
 function showOnly(id){
 
