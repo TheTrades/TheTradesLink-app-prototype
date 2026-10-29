@@ -1013,11 +1013,11 @@ function searchSignupCities() {
 
     try {
       const params = new URLSearchParams({
-        text: query + ", " + state + ", USA",
+        text: query + ", " + state,
         type: "locality",
         filter: "countrycode:us",
         format: "json",
-        limit: "10",
+        limit: "20",
         apiKey: GEOAPIFY_KEY
       });
 
@@ -1070,7 +1070,7 @@ const places = (data.results || []).filter(function(place) {
     } catch (error) {
       console.error("Location suggestions unavailable:", error);
     }
-  }, 600);
+  }, 350);
 }
 
 function showOnly(id){
