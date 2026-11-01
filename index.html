@@ -700,7 +700,14 @@ Keep job conversations and records together.
 <select id="profileState" onchange="loadCities('profileState','profileCity')"></select>
 
 <label>City / General Area</label>
-<select id="profileCity"></select>
+<input
+  id="profileCity"
+  type="text"
+  placeholder="Start typing your city or neighborhood"
+  autocomplete="off"
+oninput="searchSignupCities('profileCity','profileState')"
+>
+<div id="profileCitySuggestions"></div>
 
 <label>ZIP Code (Optional)</label>
 <input id="profileZip">
@@ -968,7 +975,7 @@ const cityEl=document.getElementById(cityID);
 if(!stateEl || !cityEl)return;
 if (cityEl.tagName === "INPUT") {
   cityEl.value = "";
-  const suggestions = document.getElementById("signupCitySuggestions");
+const suggestions = document.getElementById(cityID + "Suggestions");
   if (suggestions) suggestions.innerHTML = "";
   return;
 }
@@ -995,12 +1002,12 @@ const GEOAPIFY_KEY = "d01a8fba431b47c58e64d2b49ce4181b";
 let citySearchTimer;
 let citySearchNumber = 0;
 
-function searchSignupCities() {
+function searchSignupCities(cityID = "signupCity", stateID = "signupState") {
   clearTimeout(citySearchTimer);
 
-  const input = document.getElementById("signupCity");
-  const suggestions = document.getElementById("signupCitySuggestions");
-  const state = document.getElementById("signupState").value;
+const input = document.getElementById(cityID);
+const suggestions = document.getElementById(cityID + "Suggestions");
+const state = document.getElementById(stateID).value;
   const query = input.value.trim();
   const searchNumber = ++citySearchNumber;
 
@@ -1031,7 +1038,7 @@ function searchSignupCities() {
 
       if (searchNumber !== citySearchNumber ||
           input.value.trim() !== query ||
-          document.getElementById("signupState").value !== state) return;
+document.getElementById(stateID).value !== state) return;
 
 const places = (data.results || []).filter(function(place) {
   const matchesName = [
