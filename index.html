@@ -601,7 +601,14 @@ Create a job for local workers and crews.
 <select id="jobState" onchange="loadCities('jobState','jobCity')"></select>
 
 <label>City / General Area</label>
-<select id="jobCity"></select>
+<input
+  id="jobCity"
+  type="text"
+  placeholder="Start typing your city or neighborhood"
+  autocomplete="off"
+  oninput="searchSignupCities('jobCity','jobState')"
+>
+<div id="jobCitySuggestions"></div>
 
 <label>ZIP Code (Optional)</label>
 <input inputmode="numeric" placeholder="Example: 33030">
