@@ -285,7 +285,7 @@ Find work, hire skilled workers, connect with the trade community and get paid.
 Create Account
 </button>
 
-<button class="secondaryButton" onclick="demoLogin()">
+<button class="secondaryButton" onclick="showOnly('login')">
 Sign In
 </button>
 
@@ -296,6 +296,43 @@ Prototype version — secure account services will be connected before launch.
 </section>
 
 
+
+<!-- LOGIN PAGE -->
+
+<section id="login" class="screen">
+
+<h1>Welcome Back</h1>
+
+<p class="sub">
+Sign in to your TheTradesLink account.
+</p>
+
+<label>Email Address</label>
+<input
+  id="loginEmail"
+  type="email"
+  placeholder="Enter your email"
+  autocomplete="email"
+>
+
+<label>Password</label>
+<input
+  id="loginPassword"
+  type="password"
+  placeholder="Enter your password"
+  autocomplete="current-password"
+>
+
+<button class="blueButton" onclick="loginUser()">
+Sign In
+</button>
+
+<button class="secondaryButton" onclick="showOnly('welcome')">
+Back
+</button>
+
+</section>  
+  
 <!-- SIGNUP STEP 1 -->
 
 <section id="signup1" class="screen">
@@ -1320,7 +1357,56 @@ alert("Profile saved!");
 }
 
 
-function demoLogin(){
+async function loginUser() {
+  const email = document.getElementById("loginEmail").value.trim();
+  const password = document.getElementById("loginPassword").value;
+
+  if (!email || !password) {
+    alert("Please enter your email and password.");
+    return;
+  }
+
+  const { data, error } = await supabaseClient.auth.signInWithPassword({
+    email: email,
+    password: password
+  });
+
+  if (error) {
+    alert("Sign in failed: " + error.message);
+    return;
+  }
+
+  const { data: profile, error: profileError } = await supabaseClient
+    .from("profiles")
+    .select("*")
+    .eq("id", data.user.id)
+    .maybeSingle();
+
+  if (profileError) {
+    alert("Could not load your profile: " + profileError.message);
+    return;
+  }
+
+  const appUser = {
+    name: profile?.full_name || "",
+    type: profile?.account_type || "Worker",
+    trade: profile?.primary_trade || "Framing",
+    experience: profile?.years_experience || 0,
+    state: profile?.state || "",
+    city: profile?.city || "",
+    zip: profile?.zip_code || "",
+    radius: profile?.work_radius
+      ? profile.work_radius + " miles"
+      : "25 miles"
+  };
+
+  localStorage.setItem("theTradesLinkUser", JSON.stringify(appUser));
+
+  loadUserIntoProfile();
+  enterApp();
+}
+  
+  function demoLogin(){
 
 const user=getUser();
 
