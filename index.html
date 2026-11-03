@@ -326,13 +326,44 @@ Sign in to your TheTradesLink account.
 <button class="blueButton" onclick="loginUser()">
 Sign In
 </button>
-
+<button class="secondaryButton" onclick="sendPasswordReset()">
+Forgot Password?
+</button>
 <button class="secondaryButton" onclick="showOnly('welcome')">
 Back
 </button>
 
 </section>  
-  
+ <!-- RESET PASSWORD PAGE -->
+<section id="resetPassword" class="screen">
+
+<h1>Create New Password</h1>
+
+<p class="sub">
+Enter a new password for your TheTradesLink account.
+</p>
+
+<label>New Password</label>
+<input
+  id="newPassword"
+  type="password"
+  placeholder="Enter new password"
+  autocomplete="new-password"
+>
+
+<label>Confirm New Password</label>
+<input
+  id="confirmNewPassword"
+  type="password"
+  placeholder="Confirm new password"
+  autocomplete="new-password"
+>
+
+<button class="blueButton" onclick="updateRecoveredPassword()">
+Update Password
+</button>
+
+</section> 
 <!-- SIGNUP STEP 1 -->
 
 <section id="signup1" class="screen">
@@ -836,6 +867,11 @@ Profile
 const SUPABASE_URL = "https://ymnlhhbazfwinpudgqkn.supabase.co";
 const SUPABASE_KEY = "sb_publishable_Vi4UHmsw6eEiaMxy-Qfw0A_Tq-DmIHT";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+supabaseClient.auth.onAuthStateChange((event) => {
+  if (event === "PASSWORD_RECOVERY") {
+    showOnly("resetPassword");
+  }
+});
 async function signUpUser(email, password) {
 
 const { data, error } = await supabaseClient.auth.signUp({
@@ -1357,6 +1393,61 @@ alert("Profile saved!");
 }
 
 
+async function updateRecoveredPassword() {
+  const password = document.getElementById("newPassword").value;
+  const confirmPassword = document.getElementById("confirmNewPassword").value;
+
+  if (password.length < 8) {
+    alert("Password must be at least 8 characters.");
+    return;
+  }
+
+  if (password !== confirmPassword) {
+    alert("Passwords do not match.");
+    return;
+  }
+
+  const { data: { session }, error: sessionError } =
+    await supabaseClient.auth.getSession();
+
+  if (sessionError || !session) {
+    alert("Recovery session expired. Request a new password reset link.");
+    return;
+  }
+
+  const { error } = await supabaseClient.auth.updateUser({
+    password: password
+  });
+
+  if (error) {
+    alert("Could not update password: " + error.message);
+    return;
+  }
+
+  alert("Password updated successfully! Please sign in.");
+
+  await supabaseClient.auth.signOut();
+  showOnly("login");
+}
+async function sendPasswordReset() {
+  const email = document.getElementById("loginEmail").value.trim();
+
+  if (!email) {
+    alert("Enter your email address first.");
+    return;
+  }
+
+  const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+    redirectTo: "https://thetrades.github.io/TheTradesLink-app-prototype/"
+  });
+
+  if (error) {
+    alert("Password reset error: " + error.message);
+    return;
+  }
+
+  alert("If your email is registered, check your inbox for a password reset link.");
+}
 async function loginUser() {
   const email = document.getElementById("loginEmail").value.trim();
   const password = document.getElementById("loginPassword").value;
