@@ -630,6 +630,11 @@ The exact service fee will be clearly shown before a payment is confirmed.
 <button class="blueButton" onclick="previewJob()">
 Preview Job
 </button>
+
+<button class="secondaryButton" onclick="saveJobDraft()">
+Save Job Draft
+</button>  
+
 <div id="jobPreview" class="card" style="display:none;">
 </div>
 </section>
@@ -1451,7 +1456,68 @@ function previewJob() {
   preview.scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
+async function saveJobDraft() {
+  const read = (id) =>
+    document.getElementById(id).value.trim();
 
+  const { data: { user }, error: authError } =
+    await supabaseClient.auth.getUser();
+
+  if (authError || !user) {
+    alert("Please sign in before saving a job.");
+    return;
+  }
+
+  const title = read("jobTitle");
+  const trade = read("jobTrade");
+  const description = read("jobDescription");
+  const workers = Number(read("jobWorkers"));
+  const payment = Number(read("jobPayment"));
+  const state = read("jobState");
+  const city = read("jobCity");
+  const zip = read("jobZip");
+  const buyer = read("materialsBuyer");
+  const budget = Number(read("materialsBudget"));
+
+  if (
+    !title || !trade || !description ||
+    !state || !city ||
+    !Number.isInteger(workers) || workers < 1 ||
+    !Number.isFinite(payment) || payment <= 0
+  ) {
+    alert("Please complete all required job fields.");
+    return;
+  }
+
+  if (buyer === "worker" && (!Number.isFinite(budget) || budget <= 0)) {
+    alert("Please enter a valid materials budget.");
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("jobs")
+    .insert({
+      contractor_id: user.id,
+      title: title,
+      trade: trade,
+      description: description,
+      workers_needed: workers,
+      payment_amount: payment,
+      materials_buyer: buyer,
+      materials_budget: buyer === "worker" ? budget : null,
+      state: state,
+      city: city,
+      zip_code: zip || null,
+      status: "draft"
+    });
+
+  if (error) {
+    alert("Could not save job: " + error.message);
+    return;
+  }
+
+  alert("Job draft saved successfully!");
+}
   function toggleMaterialsBudget(){
   const buyer = document.getElementById("materialsBuyer").value;
   const section = document.getElementById("materialsBudgetSection");
