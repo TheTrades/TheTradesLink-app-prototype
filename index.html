@@ -1671,29 +1671,75 @@ async function saveJobDraft() {
     return;
   }
 
-  const { error } = await supabaseClient
-    .from("jobs")
-    .insert({
-      contractor_id: user.id,
-      title: title,
-      trade: trade,
-      description: description,
-      workers_needed: workers,
-      payment_amount: payment,
-      materials_buyer: buyer,
-      materials_budget: buyer === "worker" ? budget : null,
-      state: state,
-      city: city,
-      zip_code: zip || null,
-      status: "draft"
-    });
 
-  if (error) {
-    alert("Could not save job: " + error.message);
+  const jobValues = {
+    title: title,
+    trade: trade,
+    description: description,
+    workers_needed: workers,
+    payment_amount: payment,
+    materials_buyer: buyer,
+    materials_budget: buyer === "worker" ? budget : null,
+    state: state,
+    city: city,
+    zip_code: zip || null
+  };
+
+  const wasEditing = editingJobId !== null;
+  let result;
+
+  if (wasEditing) {
+    result = await supabaseClient
+      .from("jobs")
+      .update(jobValues)
+      .eq("id", editingJobId)
+      .eq("contractor_id", user.id)
+      .eq("status", "draft")
+      .select("id")
+      .maybeSingle();
+  } else {
+    result = await supabaseClient
+      .from("jobs")
+      .insert({
+        ...jobValues,
+        contractor_id: user.id,
+        status: "draft"
+      });
+  }
+
+  if (result.error) {
+    alert("Could not save job: " + result.error.message);
     return;
   }
 
-  alert("Job draft saved successfully!");
+  if (wasEditing && !result.data) {
+    alert("Draft not found or not editable. Nothing was updated.");
+    return;
+  }
+
+  editingJobId = null;
+
+  alert(wasEditing
+    ? "Job draft updated successfully!"
+    : "Job draft saved successfully!");
+
+  [
+    "jobTitle", "jobDescription", "jobWorkers",
+    "jobPayment", "jobCity", "jobZip"
+  ].forEach(id => {
+    document.getElementById(id).value = "";
+  });
+
+  document.getElementById("jobTrade").selectedIndex = 0;
+  document.getElementById("jobState").value = "";
+  document.getElementById("materialsBuyer").value = "poster";
+  loadCities("jobState", "jobCity");
+  toggleMaterialsBudget();
+
+  document.getElementById("jobPreview").style.display = "none";
+  openScreenByName("jobs");
+  showJobPanel("myjobs");
+
 }
   function toggleMaterialsBudget(){
   const buyer = document.getElementById("materialsBuyer").value;
@@ -1803,10 +1849,67 @@ async function loadMyJobs() {
     const status = document.createElement("p");
     status.textContent = "Status: " + (job.status || "draft");
 
-    card.append(title, trade, location, payment, status);
+    
+const openButton = document.createElement("button");
+openButton.className = "blueButton";
+openButton.textContent = "Open Draft";
+openButton.onclick = () => openJobDraft(job.id);
+
+card.append(title, trade, location, payment, status, openButton);
     container.appendChild(card);
   });
 }
+
+
+let editingJobId = null;
+
+async function openJobDraft(jobId) {
+  const { data: { user }, error: authError } =
+    await supabaseClient.auth.getUser();
+
+  if (authError || !user) {
+    alert("Please sign in first.");
+    return;
+  }
+
+  const { data: job, error } = await supabaseClient
+    .from("jobs")
+    .select("*")
+    .eq("id", jobId)
+    .eq("contractor_id", user.id)
+    .eq("status", "draft")
+    .maybeSingle();
+
+  if (error || !job) {
+    alert("Could not open this draft.");
+    return;
+  }
+
+  const fill = (id, value) => {
+    document.getElementById(id).value = value ?? "";
+  };
+
+  fill("jobTitle", job.title);
+  fill("jobTrade", job.trade);
+  fill("jobDescription", job.description);
+  fill("jobWorkers", job.workers_needed);
+  fill("jobPayment", job.payment_amount);
+  fill("materialsBuyer", job.materials_buyer);
+
+  toggleMaterialsBudget();
+  fill("materialsBudget", job.materials_budget);
+
+  fill("jobState", job.state);
+  loadCities("jobState", "jobCity");
+  fill("jobCity", job.city);
+  fill("jobZip", job.zip_code);
+
+  editingJobId = job.id;
+
+  document.getElementById("jobPreview").style.display = "none";
+  openScreenByName("post");
+}
+
 
 function showJobPanel(type){
 
