@@ -1751,6 +1751,63 @@ function sendMaterialRequest() {
   );
 }
   
+
+async function loadMyJobs() {
+  const container = document.getElementById("myJobsResults");
+  if (!container) return;
+
+  const { data: { user }, error: authError } =
+    await supabaseClient.auth.getUser();
+
+  if (authError || !user) {
+    container.textContent = "Please sign in to view your jobs.";
+    return;
+  }
+
+  const { data: jobs, error } = await supabaseClient
+    .from("jobs")
+    .select("id, title, trade, payment_amount, city, state, status")
+    .eq("contractor_id", user.id)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    container.textContent = "Could not load jobs: " + error.message;
+    return;
+  }
+
+  if (!jobs || jobs.length === 0) {
+    container.textContent = "You haven't saved any jobs yet.";
+    return;
+  }
+
+  container.replaceChildren();
+
+  jobs.forEach(job => {
+    const card = document.createElement("div");
+    card.className = "card";
+
+    const title = document.createElement("h3");
+    title.textContent = job.title || "Untitled Job";
+
+    const trade = document.createElement("p");
+    trade.textContent = "Trade: " + (job.trade || "Not specified");
+
+    const location = document.createElement("p");
+    location.textContent =
+      "Location: " + [job.city, job.state].filter(Boolean).join(", ");
+
+    const payment = document.createElement("p");
+    payment.textContent = "Payment: $" +
+      Number(job.payment_amount || 0).toLocaleString();
+
+    const status = document.createElement("p");
+    status.textContent = "Status: " + (job.status || "draft");
+
+    card.append(title, trade, location, payment, status);
+    container.appendChild(card);
+  });
+}
+
 function showJobPanel(type){
 
 const panel=document.getElementById("jobPanel");
@@ -1827,27 +1884,21 @@ panel.innerHTML=`
 }
 
 
+
 if(type==="myjobs"){
 
-panel.innerHTML=`
+  panel.innerHTML=`
+    <h2 style="margin-top:25px">My Jobs</h2>
 
-<h2 style="margin-top:25px">My Jobs</h2>
+    <div class="card" id="myJobsResults">
+      <p>Loading your saved jobs...</p>
+    </div>
+  `;
 
-<div class="card">
-
-<h2>Frame New Home</h2>
-
-<p class="green">● In Progress</p>
-
-<p>Job payment: $4,000</p>
-
-<button class="blueButton">Open Job</button>
-
-</div>
-
-`;
+  loadMyJobs();
 
 }
+
 
 
 if(type==="materials"){
