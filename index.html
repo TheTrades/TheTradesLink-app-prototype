@@ -1995,43 +1995,67 @@ function showJobPanel(type){
 
 const panel=document.getElementById("jobPanel");
 
-if(type==="work"){
 
-panel.innerHTML=`
+if (type === "work") {
+  panel.innerHTML = `
+    <h2 style="margin-top:25px">Published Jobs</h2>
+    <p>Loading jobs...</p>
+  `;
 
-<h2 style="margin-top:25px">Available Near You</h2>
+  supabaseClient
+    .from("jobs")
+    .select("title, trade, description, workers_needed, payment_amount, city, state")
+    .eq("status", "published")
+    .order("created_at", { ascending: false })
+    .then(({ data: jobs, error }) => {
 
-<div class="card">
+      panel.innerHTML = `
+        <h2 style="margin-top:25px">Published Jobs</h2>
+      `;
 
-<h2>Frame New Home</h2>
+      if (error) {
+        const message = document.createElement("p");
+        message.textContent = "Could not load jobs: " + error.message;
+        panel.appendChild(message);
+        return;
+      }
 
-<p class="sub">Framing • 5 workers</p>
+      if (!jobs || jobs.length === 0) {
+        panel.innerHTML += "<p>No published jobs available yet.</p>";
+        return;
+      }
 
-<p>Labor for residential framing project. Plans provided.</p>
+      jobs.forEach(job => {
+        const card = document.createElement("div");
+        card.className = "card";
 
-<div class="price">$4,000</div>
+        const title = document.createElement("h2");
+        title.textContent = job.title || "Untitled Job";
 
-<button class="blueButton">View & Apply</button>
+        const trade = document.createElement("p");
+        trade.textContent = "Trade: " + (job.trade || "Not specified");
 
-</div>
+        const description = document.createElement("p");
+        description.textContent = job.description || "";
 
-<div class="card">
+        const workers = document.createElement("p");
+        workers.textContent = "Workers needed: " + (job.workers_needed || 1);
 
-<h2>Drywall Hang & Finish</h2>
+        const location = document.createElement("p");
+        location.textContent = "Location: " +
+          [job.city, job.state].filter(Boolean).join(", ");
 
-<p class="sub">Drywall • 3–4 workers</p>
+        const payment = document.createElement("div");
+        payment.className = "price";
+        payment.textContent = "$" +
+          Number(job.payment_amount || 0).toLocaleString();
 
-<p>Hang and finish drywall for renovation.</p>
-
-<div class="price">$3,200</div>
-
-<button class="blueButton">View & Apply</button>
-
-</div>
-
-`;
-
+        card.append(title, trade, description, workers, location, payment);
+        panel.appendChild(card);
+      });
+    });
 }
+
 
 
 if(type==="workers"){
