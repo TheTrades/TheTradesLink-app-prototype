@@ -703,6 +703,10 @@ Preview Job
 Save Job Draft
 </button>  
 
+<button class="blueButton" id="publishJobButton" onclick="publishJob()" disabled>
+  Publish Job
+</button>
+
 <div id="jobPreview" class="card" style="display:none;">
 </div>
 </section>
@@ -1523,6 +1527,25 @@ showOnly("welcome");
 
 function openScreen(id,button){
 
+if (id === "post") {
+  editingJobId = null;
+  document.getElementById("publishJobButton").disabled = true;
+
+["jobTitle", "jobDescription", "jobWorkers",
+ "jobPayment", "materialsBudget", "jobCity", "jobZip"]
+.forEach(fieldId => {
+  document.getElementById(fieldId).value = "";
+});
+
+document.getElementById("jobTrade").selectedIndex = 0;
+document.getElementById("materialsBuyer").value = "poster";
+document.getElementById("jobState").value = "";
+loadCities("jobState", "jobCity");
+toggleMaterialsBudget();
+document.getElementById("jobPreview").style.display = "none";
+document.getElementById("jobCitySuggestions").innerHTML = "";
+}
+
 showOnly(id);
 
 document.querySelectorAll(".bottomNav button")
@@ -1719,6 +1742,8 @@ async function saveJobDraft() {
 
   editingJobId = null;
 
+document.getElementById("publishJobButton").disabled = true;
+
   alert(wasEditing
     ? "Job draft updated successfully!"
     : "Job draft saved successfully!");
@@ -1855,13 +1880,66 @@ openButton.className = "blueButton";
 openButton.textContent = "Open Draft";
 openButton.onclick = () => openJobDraft(job.id);
 
-card.append(title, trade, location, payment, status, openButton);
+
+card.append(title, trade, location, payment, status);
+
+if (job.status === "draft") {
+  card.appendChild(openButton);
+}
+
     container.appendChild(card);
   });
 }
 
 
 let editingJobId = null;
+
+async function publishJob() {
+  if (!editingJobId) {
+    alert("Open a saved draft from My Jobs first.");
+    return;
+  }
+
+  const confirmed = confirm(
+    "Publish this saved draft? Any unsaved changes will not be included."
+  );
+
+  if (!confirmed) return;
+
+  const { data: { user }, error: authError } =
+    await supabaseClient.auth.getUser();
+
+  if (authError || !user) {
+    alert("Please sign in first.");
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("jobs")
+    .update({ status: "published" })
+    .eq("id", editingJobId)
+    .eq("contractor_id", user.id)
+    .eq("status", "draft")
+    .select("id")
+    .maybeSingle();
+
+  if (error) {
+    alert("Could not publish job: " + error.message);
+    return;
+  }
+
+  if (!data) {
+    alert("Draft not found or already published.");
+    return;
+  }
+
+  editingJobId = null;
+  document.getElementById("publishJobButton").disabled = true;
+
+  alert("Job published successfully!");
+  openScreenByName("jobs");
+  showJobPanel("myjobs");
+}
 
 async function openJobDraft(jobId) {
   const { data: { user }, error: authError } =
@@ -1905,6 +1983,8 @@ async function openJobDraft(jobId) {
   fill("jobZip", job.zip_code);
 
   editingJobId = job.id;
+
+document.getElementById("publishJobButton").disabled = false;
 
   document.getElementById("jobPreview").style.display = "none";
   openScreenByName("post");
