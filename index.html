@@ -1997,7 +1997,7 @@ const panel=document.getElementById("jobPanel");
 
 
 if (type === "work") {
-  panel.innerHTML = `
+  panel.innerHTML = `  #
     <h2 style="margin-top:25px">Published Jobs</h2>
     <p>Loading jobs...</p>
   `;
@@ -2054,6 +2054,28 @@ if (type === "work") {
         panel.appendChild(card);
       });
     });
+  
+if (!window.tradesJobsLiveChannel) {
+  window.tradesJobsLiveChannel = supabaseClient
+    .channel("tradeslink-jobs-live")
+    .on(
+      "postgres_changes",
+      {
+        event: "*",
+        schema: "public",
+        table: "jobs"
+      },
+      () => {
+        const heading = panel.querySelector("h2");
+
+        if (heading && heading.textContent === "Published Jobs") {
+          showJobPanel("work");
+        }
+      }
+    )
+    .subscribe();
+}
+
 }
 
 
