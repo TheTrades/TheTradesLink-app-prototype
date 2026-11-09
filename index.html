@@ -1991,6 +1991,43 @@ document.getElementById("publishJobButton").disabled = false;
 }
 
 
+function openPublishedJob(job) {
+  const panel = document.getElementById("jobPanel");
+  panel.innerHTML = "";
+
+  const backButton = document.createElement("button");
+  backButton.className = "secondaryButton";
+  backButton.textContent = "← Back to Find Work";
+  backButton.onclick = () => showJobPanel("work");
+
+  const card = document.createElement("div");
+  card.className = "card";
+
+  const heading = document.createElement("h2");
+  heading.textContent = job.title || "Untitled Job";
+  card.appendChild(heading);
+
+  function addDetail(label, value) {
+    const p = document.createElement("p");
+    p.textContent = label + ": " + value;
+    card.appendChild(p);
+  }
+
+  addDetail("Trade", job.trade || "Not specified");
+  addDetail("Description", job.description || "Not specified");
+  addDetail("Workers Needed", job.workers_needed ?? 1);
+  addDetail("Location",
+    [job.city, job.state].filter(Boolean).join(", "));
+  addDetail("Payment",
+    "$" + Number(job.payment_amount || 0).toLocaleString());
+
+  const notice = document.createElement("p");
+  notice.textContent = "Job applications are coming soon.";
+  card.appendChild(notice);
+
+  panel.append(backButton, card);
+}
+
 function showJobPanel(type){
 
 const panel=document.getElementById("jobPanel");
@@ -2004,7 +2041,9 @@ if (type === "work") {
 
   supabaseClient
     .from("jobs")
-    .select("title, trade, description, workers_needed, payment_amount, city, state")
+
+.select("id, title, trade, description, workers_needed, payment_amount, city, state")
+
     .eq("status", "published")
     .order("created_at", { ascending: false })
     .then(({ data: jobs, error }) => {
@@ -2050,7 +2089,13 @@ if (type === "work") {
         payment.textContent = "$" +
           Number(job.payment_amount || 0).toLocaleString();
 
-        card.append(title, trade, description, workers, location, payment);
+const viewButton = document.createElement("button");
+viewButton.className = "blueButton";
+viewButton.textContent = "View Job";
+viewButton.onclick = () => openPublishedJob(job);
+
+card.append(title, trade, description, workers, location, payment, viewButton);
+
         panel.appendChild(card);
       });
     });
