@@ -2021,9 +2021,51 @@ function openPublishedJob(job) {
   addDetail("Payment",
     "$" + Number(job.payment_amount || 0).toLocaleString());
 
-  const notice = document.createElement("p");
-  notice.textContent = "Job applications are coming soon.";
-  card.appendChild(notice);
+
+const applyButton = document.createElement("button");
+applyButton.className = "blueButton";
+applyButton.textContent = "Apply for Job";
+
+applyButton.onclick = async () => {
+  applyButton.disabled = true;
+  applyButton.textContent = "Submitting...";
+
+  try {
+    const { data: { user }, error: authError } =
+      await supabaseClient.auth.getUser();
+
+    if (authError || !user) {
+      alert("Please sign in to apply for this job.");
+      return;
+    }
+
+    const { error } = await supabaseClient
+      .from("job_applications")
+      .insert({
+        job_id: job.id,
+        worker_id: user.id,
+        status: "pending"
+      });
+
+    if (error) {
+      alert("Application failed: " + error.message);
+      return;
+    }
+
+    applyButton.textContent = "Application Submitted";
+    alert("Your application was submitted successfully!");
+
+  } catch (err) {
+    alert("Something went wrong: " + err.message);
+  } finally {
+    if (applyButton.textContent !== "Application Submitted") {
+      applyButton.disabled = false;
+      applyButton.textContent = "Apply for Job";
+    }
+  }
+};
+
+card.appendChild(applyButton);
 
   panel.append(backButton, card);
 }
