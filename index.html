@@ -1957,6 +1957,53 @@ async function showJobApplications(jobId) {
         " — Status: " + application.status;
 
       card.appendChild(details);
+  
+if (application.status === "pending") {
+  const actions = document.createElement("div");
+
+  ["accepted", "rejected"].forEach(newStatus => {
+    const button = document.createElement("button");
+    button.className = "blueButton";
+    button.textContent =
+      newStatus === "accepted" ? "Accept" : "Reject";
+
+    button.onclick = async () => {
+      const confirmed = confirm(
+        "Are you sure you want to " + newStatus +
+        " this application?"
+      );
+
+      if (!confirmed) return;
+
+      const buttons = actions.querySelectorAll("button");
+      buttons.forEach(b => b.disabled = true);
+
+      const { data, error } = await supabaseClient
+        .from("job_applications")
+        .update({ status: newStatus })
+        .eq("id", application.id)
+        .eq("job_id", jobId)
+        .eq("status", "pending")
+        .select("id");
+
+      if (error || !data || data.length === 0) {
+        alert(
+          "Could not update application: " +
+          (error ? error.message : "Application unavailable.")
+        );
+        buttons.forEach(b => b.disabled = false);
+        return;
+      }
+
+      await showJobApplications(jobId);
+    };
+
+    actions.appendChild(button);
+  });
+
+  card.appendChild(actions);
+}
+
       container.appendChild(card);
     });
 
