@@ -1887,10 +1887,83 @@ if (job.status === "draft") {
   card.appendChild(openButton);
 }
 
+if (job.status === "published") {
+  const applicationsButton = document.createElement("button");
+  applicationsButton.className = "blueButton";
+  applicationsButton.textContent = "View Applications";
+  applicationsButton.onclick = () => showJobApplications(job.id);
+  card.appendChild(applicationsButton);
+}
+
     container.appendChild(card);
   });
 }
 
+
+async function showJobApplications(jobId) {
+  const container = document.getElementById("myJobsResults");
+  if (!container) return;
+
+  container.replaceChildren();
+
+  const backButton = document.createElement("button");
+  backButton.className = "blueButton";
+  backButton.textContent = "← Back to My Jobs";
+  backButton.onclick = () => loadMyJobs();
+  container.appendChild(backButton);
+
+  const heading = document.createElement("h3");
+  heading.textContent = "Job Applications";
+  container.appendChild(heading);
+
+  const message = document.createElement("p");
+  message.textContent = "Loading applications...";
+  container.appendChild(message);
+
+  try {
+    const { data: { user }, error: authError } =
+      await supabaseClient.auth.getUser();
+
+    if (authError || !user) {
+      message.textContent = "Please sign in.";
+      return;
+    }
+
+    const { data: applications, error } = await supabaseClient
+      .from("job_applications")
+      .select("id, status, created_at")
+      .eq("job_id", jobId)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      message.textContent = "Error: " + error.message;
+      return;
+    }
+
+    if (!applications || applications.length === 0) {
+      message.textContent = "No applications yet.";
+      return;
+    }
+
+    message.remove();
+
+    applications.forEach(application => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const details = document.createElement("p");
+      details.textContent =
+        "Application #" + application.id +
+        " — Status: " + application.status;
+
+      card.appendChild(details);
+      container.appendChild(card);
+    });
+
+  } catch (err) {
+    message.textContent = "Error: " + err.message;
+  }
+}
 
 let editingJobId = null;
 
