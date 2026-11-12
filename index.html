@@ -2205,6 +2205,11 @@ applyButton.onclick = async () => {
       return;
     }
 
+if (job.contractor_id === user.id) {
+  alert("You cannot apply to your own job.");
+  return;
+}
+
     const { error } = await supabaseClient
       .from("job_applications")
       .insert({
@@ -2232,6 +2237,37 @@ applyButton.onclick = async () => {
 };
 
 card.appendChild(applyButton);
+
+supabaseClient.auth.getUser().then(async ({ data, error }) => {
+  if (error || !data?.user) return;
+
+  const user = data.user;
+
+  if (user.id === job.contractor_id) {
+    applyButton.textContent = "You posted this job";
+    applyButton.disabled = true;
+    return;
+  }
+
+  const { data: existing, error: checkError } =
+    await supabaseClient
+      .from("job_applications")
+      .select("id")
+      .eq("job_id", job.id)
+      .eq("worker_id", user.id)
+      .maybeSingle();
+
+  if (checkError) {
+    console.error("Application check failed:", checkError);
+    return;
+  }
+
+  if (existing) {
+    applyButton.textContent = "Already Applied";
+    applyButton.disabled = true;
+  }
+});
+
 
   panel.append(backButton, card);
 }
@@ -2308,7 +2344,9 @@ if (type === "work") {
   supabaseClient
     .from("jobs")
 
-.select("id, title, trade, description, workers_needed, payment_amount, city, state")
+
+.select("id, title, trade, description, workers_needed, payment_amount, city, state, contractor_id")
+
 
     .eq("status", "published")
     .order("created_at", { ascending: false })
