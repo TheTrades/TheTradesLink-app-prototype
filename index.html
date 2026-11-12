@@ -1359,8 +1359,7 @@ user.radius || "25 miles";
 
 }
 
-
-function saveProfile(){
+async function saveProfile(){
 
 const oldUser=getUser() || {};
 
@@ -1384,6 +1383,50 @@ document.getElementById("profileZip").value;
 
 oldUser.radius=
 document.getElementById("profileRadius").value;
+
+const { data: authData, error: authError } =
+  await supabaseClient.auth.getUser();
+
+if (authError || !authData?.user) {
+  alert("Please sign in before saving your profile.");
+  return;
+}
+
+let fullName = (
+  oldUser.name ||
+  authData.user.user_metadata?.full_name ||
+  ""
+).trim();
+
+if (!fullName) {
+  const enteredName = prompt("Enter your full name:");
+  if (!enteredName || !enteredName.trim()) return;
+  fullName = enteredName.trim();
+}
+
+oldUser.name = fullName;
+
+const experience = parseInt(oldUser.experience, 10);
+const radius = parseInt(oldUser.radius, 10);
+
+const { error: saveError } = await supabaseClient
+  .from("profiles")
+  .upsert({
+    id: authData.user.id,
+    full_name: fullName,
+    account_type: oldUser.type || "Worker",
+    primary_trade: oldUser.trade || null,
+    years_experience: Number.isFinite(experience) ? experience : 0,
+    state: oldUser.state || null,
+    city: oldUser.city || null,
+    zip_code: oldUser.zip || null,
+    work_radius: Number.isFinite(radius) ? radius : 25
+  }, { onConflict: "id" });
+
+if (saveError) {
+  alert("Could not save profile: " + saveError.message);
+  return;
+}
 
 localStorage.setItem(
 "theTradesLinkUser",
