@@ -2236,6 +2236,64 @@ card.appendChild(applyButton);
   panel.append(backButton, card);
 }
 
+async function loadMyApplications() {
+  const container = document.getElementById("myApplicationsResults");
+  if (!container) return;
+
+  container.textContent = "Loading your applications...";
+
+  try {
+    const { data: { user }, error: authError } =
+      await supabaseClient.auth.getUser();
+
+    if (authError || !user) {
+      container.textContent = "Please sign in to view applications.";
+      return;
+    }
+
+    const { data: applications, error } = await supabaseClient
+      .from("job_applications")
+      .select("id, job_id, status, created_at, jobs(title, city, state)")
+      .eq("worker_id", user.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      container.textContent = "Error: " + error.message;
+      return;
+    }
+
+    container.replaceChildren();
+
+    if (!applications || applications.length === 0) {
+      container.textContent = "You haven't applied to any jobs yet.";
+      return;
+    }
+
+    applications.forEach(application => {
+      const card = document.createElement("div");
+      card.className = "card";
+
+      const title = document.createElement("h3");
+      title.textContent =
+        application.jobs?.title || "Job " + application.job_id.slice(0, 8);
+
+      const status = document.createElement("p");
+      status.textContent = "Application Status: " + application.status;
+
+      const location = document.createElement("p");
+      location.textContent = "Location: " +
+        [application.jobs?.city, application.jobs?.state]
+          .filter(Boolean).join(", ");
+
+      card.append(title, status, location);
+      container.appendChild(card);
+    });
+
+  } catch (err) {
+    container.textContent = "Error: " + err.message;
+  }
+}
+
 function showJobPanel(type){
 
 const panel=document.getElementById("jobPanel");
@@ -2372,6 +2430,10 @@ if(type==="myjobs"){
   panel.innerHTML=`
     <h2 style="margin-top:25px">My Jobs</h2>
 
+<button class="blueButton" onclick='showJobPanel("applications")'>
+  My Applications
+</button>
+
     <div class="card" id="myJobsResults">
       <p>Loading your saved jobs...</p>
     </div>
@@ -2381,6 +2443,23 @@ if(type==="myjobs"){
 
 }
 
+
+if (type === "applications") {
+  panel.innerHTML = `
+    <h2 style="margin-top:25px">My Applications</h2>
+
+    <button class="blueButton"
+      onclick='showJobPanel("myjobs")'>
+      ← Back to My Jobs
+    </button>
+
+    <div class="card" id="myApplicationsResults">
+      <p>Loading your applications...</p>
+    </div>
+  `;
+
+  loadMyApplications();
+}
 
 
 if(type==="materials"){
