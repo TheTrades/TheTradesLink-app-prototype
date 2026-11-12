@@ -2190,7 +2190,10 @@ function openPublishedJob(job) {
 
 const applyButton = document.createElement("button");
 applyButton.className = "blueButton";
-applyButton.textContent = "Apply for Job";
+
+applyButton.textContent = "Checking eligibility...";
+applyButton.disabled = true;
+
 
 applyButton.onclick = async () => {
   applyButton.disabled = true;
@@ -2239,7 +2242,15 @@ if (job.contractor_id === user.id) {
 card.appendChild(applyButton);
 
 supabaseClient.auth.getUser().then(async ({ data, error }) => {
-  if (error || !data?.user) return;
+
+if (error || !data?.user) {
+  applyButton.textContent = error
+    ? "Unable to check sign-in"
+    : "Sign in to apply";
+  applyButton.disabled = true;
+  return;
+}
+
 
   const user = data.user;
 
@@ -2257,15 +2268,24 @@ supabaseClient.auth.getUser().then(async ({ data, error }) => {
       .eq("worker_id", user.id)
       .maybeSingle();
 
-  if (checkError) {
-    console.error("Application check failed:", checkError);
-    return;
-  }
 
-  if (existing) {
-    applyButton.textContent = "Already Applied";
-    applyButton.disabled = true;
-  }
+if (checkError) {
+  console.error("Application check failed:", checkError);
+  applyButton.textContent = "Unable to check eligibility";
+  applyButton.disabled = true;
+  return;
+}
+
+
+
+if (existing) {
+  applyButton.textContent = "Already Applied";
+  applyButton.disabled = true;
+} else {
+  applyButton.textContent = "Apply for Job";
+  applyButton.disabled = false;
+}
+
 });
 
 
