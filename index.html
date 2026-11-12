@@ -1972,11 +1972,9 @@ async function showJobApplications(jobId) {
       return;
     }
 
-    const { data: applications, error } = await supabaseClient
-      .from("job_applications")
-      .select("id, status, created_at")
-      .eq("job_id", jobId)
-      .order("created_at", { ascending: false });
+  
+const { data: applications, error } = await supabaseClient
+  .rpc("get_job_applicants", { p_job_id: jobId });
 
     if (error) {
       message.textContent = "Error: " + error.message;
@@ -1995,9 +1993,14 @@ async function showJobApplications(jobId) {
       card.className = "card";
 
       const details = document.createElement("p");
-      details.textContent =
-        "Application #" + application.id +
-        " — Status: " + application.status;
+
+details.textContent =
+  "Applicant: " + (application.full_name || "Name unavailable") +
+  " | Trade: " + (application.primary_trade || "Not specified") +
+  " | Experience: " +
+  (application.years_experience ?? "Not provided") + " years" +
+  " | Status: " + application.status;
+
 
       card.appendChild(details);
   
